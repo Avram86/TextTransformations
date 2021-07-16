@@ -7,66 +7,98 @@ namespace TextTransformations
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Please enter a text:");
-            string answer = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(answer))
+            bool anotherTransformation = true;
+
+            
+                Console.WriteLine("Please enter a text:");
+                string answer = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(answer))
+                {
+                    answer = "Playing around with factory pattern and abstract factory pattern!";
+                }
+
+            while (anotherTransformation)
             {
-                answer = "Playing around with factory pattern and abstract factory pattern!";
-            }
+                TypesOfTransformation type = GivenAnswer();
 
-            TypesOfTransformation type = GivenAnswer();
+                Application.InitializeApplication(answer, type);
 
-            Application.InitializeApplication(answer, type);
-
-            switch (type)
-            {
-                case TypesOfTransformation.None:
-                case TypesOfTransformation.UpperCase:
-                    {
-                        string result = Application.ApplyTransformation(type);
-                        Console.WriteLine(result);
-                    }
-                    break;
-
-                case TypesOfTransformation.LowerCase:
-                    {
-                        string result = Application.ApplyTransformation(type);
-                        Console.WriteLine(result);
-                    }
-                    break;
-
-                case TypesOfTransformation.InsertSubStringAtCertainPosition:
-                    {
-                        int position = RequestPosition();
-                        string textToBeInserted = RequestText("inserted.");
-                        string result = Application.ApplyTransformation(type, position, textToBeInserted: textToBeInserted);
-                        Console.WriteLine(result);
-                    }
-                    break;
-
-                case TypesOfTransformation.ReplacesubStringWithAnother:
-                    {
+                switch (type)
+                {
+                    case TypesOfTransformation.None:
+                    case TypesOfTransformation.UpperCase:
                         {
-                            string textToBeReplaced = RequestText("replaced.");
-                            string textToReplaceWith = RequestText("replaced with.");
-                            string result = Application.ApplyTransformation(type, textToReplaceWith: textToReplaceWith, textToBeRemoved: textToBeReplaced);
-                            Console.WriteLine(result);
+                            answer = Application.ApplyTransformation(type);
+                            Console.WriteLine(answer);
+                        }
+                        break;
+
+                    case TypesOfTransformation.LowerCase:
+                        {
+                            answer = Application.ApplyTransformation(type);
+                            Console.WriteLine(answer);
+                        }
+                        break;
+
+                    case TypesOfTransformation.InsertSubStringAtCertainPosition:
+                        {
+                            int position = RequestPosition();
+                            string textToBeInserted = RequestText("inserted.");
+                            answer = Application.ApplyTransformation(type, position, textToBeInserted: textToBeInserted);
+                            Console.WriteLine(answer);
+                        }
+                        break;
+
+                    case TypesOfTransformation.ReplacesubStringWithAnother:
+                        {
+                            {
+                                string textToBeReplaced = RequestText("replaced.");
+                                string textToReplaceWith = RequestText("replaced with.");
+                                answer = Application.ApplyTransformation(type, textToReplaceWith: textToReplaceWith, textToBeRemoved: textToBeReplaced);
+                                Console.WriteLine(answer);
+                            }
+                        }
+                        break;
+
+                    case TypesOfTransformation.RemoveAllInstancesOfSubString:
+                        {
+                            string textToBeRemoved = RequestText("removed");
+                            answer = Application.ApplyTransformation(type, textToBeRemoved: textToBeRemoved);
+                            Console.WriteLine(answer);
+                        }
+                        break;
+                }
+
+                bool iscorrectAnser = false;
+                while (!iscorrectAnser)
+                {
+                    Console.WriteLine("Wolud you like to apply another transformation? (y/n)");
+                    string another = Console.ReadLine();
+                    if (char.TryParse(another, out char anotherAnswer))
+                    {
+                        if (string.Equals(anotherAnswer, 'y'))
+                        {
+                            anotherTransformation = true;
+                            iscorrectAnser = true;
+                        }
+                        else if (string.Equals(anotherAnswer, 'n'))
+                        {
+                            anotherTransformation = false;
+                            iscorrectAnser = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("You must select from y and n!");
+                            iscorrectAnser = false;
                         }
                     }
-                    break;
-
-                case TypesOfTransformation.RemoveAllInstancesOfSubString:
+                    else
                     {
-                        string textToBeRemoved = RequestText("removed");
-                        string result = Application.ApplyTransformation(type, textToBeRemoved: textToBeRemoved);
-                        Console.WriteLine(result);
+                        Console.WriteLine("You must select from y and n!");
+                        iscorrectAnser = false;
                     }
-                    break;
+                }
             }
-
-
-
-
         }
 
         private static TypesOfTransformation GivenAnswer()
